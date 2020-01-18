@@ -10,29 +10,31 @@ export default function App() {
     else setShowRoom(true)
   }
   return (
-    <div>
+    <>
       {!showRoom ? (
-        <div>
-          <h1>This is fancy chat, just join</h1>
+        <div className="container">
+          <h1 className="header">This is fancy chat, just join</h1>
           <input
+            className="name"
             value={name}
             type="text"
-            placeholder="name"
+            placeholder="Name"
             onChange={e => setName(e.target.value)}
           ></input>
           <input
+            className="room"
             value={room}
             type="text"
-            placeholder="room"
+            placeholder="Room"
             onChange={e => setRoom(e.target.value)}
           ></input>
-          <button type="button" onClick={goToRoom}>
+          <button className="enter" type="button" onClick={goToRoom}>
             GO
           </button>
         </div>
       ) : (
         <Room room={room} name={name}></Room>
       )}
-    </div>
+    </>
   )
 }

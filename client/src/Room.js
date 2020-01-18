@@ -34,15 +34,36 @@ export default function Room({ room, name }) {
       })
     }
   }
-  console.log(message, messages)
+
   return (
-    <div className="container">
-      <input
-        value={message}
-        type="text"
-        onChange={e => setMessage(e.target.value)}
-        onKeyPress={e => (e.key === "Enter" ? sendMessage(e) : null)}
-      ></input>
+    <div className="roomContent">
+      <div className="roomHeader">
+        <p className="roomName">Room: {room}</p>
+        <div className="close">X</div>
+      </div>
+      <div className="content">
+        <div className="chatArea"></div>
+        <div className="info">
+          This is sa simple realtime chat application <br />
+          <br />
+          Created with React, Express, Socket.IO
+          <br />
+          <br />
+          Try it out!
+        </div>
+        <div className="users">Users in room:</div>
+      </div>
+      <div className="footer">
+        <input
+          className="textInput"
+          value={message}
+          type="text"
+          placeholder="Enter text..."
+          onChange={e => setMessage(e.target.value)}
+          onKeyPress={e => (e.key === "Enter" ? sendMessage(e) : null)}
+        ></input>
+        <button className="send">SEND</button>
+      </div>
     </div>
   )
 }
