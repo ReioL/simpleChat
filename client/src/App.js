@@ -15,6 +15,7 @@ export default function App() {
         <div className="container">
           <h1 className="header">This is fancy chat, just join</h1>
           <input
+            maxLength="25"
             className="name"
             value={name}
             type="text"
@@ -22,6 +23,7 @@ export default function App() {
             onChange={e => setName(e.target.value)}
           ></input>
           <input
+            maxLength="15"
             className="room"
             value={room}
             type="text"

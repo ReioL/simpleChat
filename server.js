@@ -8,8 +8,6 @@ const io = socketio(server)
 
 const PORT = process.env.PORT || 5000
 
-server.listen(PORT, () => console.log("Server has started!"))
-
 app.get("/", (req, res) => {
   res.sendFile(__dirname + "/client/src/index.html")
 })
@@ -44,14 +42,17 @@ io.on("connection", socket => {
 
   socket.on("join", ({ name, room }, callback) => {
     const user = addUser({ id: socket.id, name, room })
-    if (typeof user === "string") return callback(user)
-
+    if (typeof user === "string") return callback(user) //check if username and room are not empty
+    //joing a specified room
+    socket.join(user.room)
+    // sending to the client
     socket.emit("message", { msg: `Welcome ${user.name} to room ${user.room}` })
+    // sending to all clients in the same room except sender
     socket.broadcast
       .to(user.room)
       .emit("message", { msg: `${user.name} has joined` })
-    socket.join(user.room)
 
+    //sending to all clients in specified room including sender
     io.to(user.room).emit("roomData", {
       room: user.room,
       users: getUsersInRoom(user.room)
@@ -62,11 +63,9 @@ io.on("connection", socket => {
 
   socket.on("sendMessage", (message, callback) => {
     const user = getUser(socket.id)
+    //sending to all clients in specified room including sender
     io.to(user.room).emit("message", { user: user.name, msg: message })
-    io.to(user.room).emit("roomData", {
-      room: user.room,
-      users: getUsersInRoom(user.room)
-    })
+    //this callback makes input into empty string in frontend side
     callback()
   })
 
@@ -74,7 +73,18 @@ io.on("connection", socket => {
     console.log("user disconnected")
 
     const user = getUser(socket.id)
-    io.to(user.room).emit("message", { msg: `${user.name} has left` })
+    console.log(user)
+    //sending to all clients in specified room excluding sender
+    if (user) {
+      socket.to(user.room).emit("message", { msg: `${user.name} has left` })
+      socket.to(user.room).emit("roomData", {
+        room: user.room,
+        users: getUsersInRoom(user.room)
+      })
+    }
+
     removeUser(socket.id)
   })
 })
+
+server.listen(PORT, () => console.log("Server has started!"))

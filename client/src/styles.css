@@ -146,3 +146,9 @@
 .send:active{
   transform: scale(0.95);
 }
+
+.message {
+  padding-left:10px;
+  word-break: break-word;
+  user-select: text;
+}
